@@ -4,26 +4,22 @@ using UnityEngine;
 
 public class JumpController : MonoBehaviour {
 
+	// CONSTANTS :
 	private Vector2 jumpForce = new Vector2(0, 300f);
 
-	public float m_MinJumpForce = 10.0f;
-	public float m_MaxJumpForce = 10.0f;
-	public Vector2 m_MinJumpVector = new Vector2(-0.1f, 1.0f);
-	public Vector2 m_MaxJumpVector = new Vector2(0.1f, 1.0f);
-
-
-
 	// PROPERTIES :
+	private LayerMask layerMask;
 	private bool jumpRegistered;
 	private JellySprite jellySprite;
 
 	private void Start() {
 		jellySprite = GetComponent<JellySprite>();
+		layerMask = LayerMask.GetMask("Ground");
 	}
 
 	// Update is called once per frame
 	private void Update () {
-		if(Input.GetKeyDown(KeyCode.Space)) {
+		if(Input.GetKeyDown(KeyCode.Space) && jellySprite.IsGrounded(layerMask, 1)) {
 			jumpRegistered = true;
 			Debug.Log("Jump registered");
 		}

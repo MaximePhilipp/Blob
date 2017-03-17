@@ -54,8 +54,9 @@
      <Compile Include="Assets\JellySprites\Scripts\JellySprite.cs" />
      <Compile Include="Assets\JellySprites\Scripts\JellySpriteReferencePoint.cs" />
      <Compile Include="Assets\JellySprites\Scripts\UnityJellySprite.cs" />
-     <Compile Include="Assets\Scripts\GroundTiltController.cs" />
-     <Compile Include="Assets\Scripts\JumpController.cs" />
+     <Compile Include="Assets\Scripts\Camera\CameraFollow.cs" />
+     <Compile Include="Assets\Scripts\Map\GroundTiltController.cs" />
+     <Compile Include="Assets\Scripts\Player\JumpController.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

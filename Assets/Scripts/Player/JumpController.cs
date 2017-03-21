@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Lean.Touch;
 using UnityEngine;
 
 public class JumpController : MonoBehaviour {
@@ -19,7 +20,12 @@ public class JumpController : MonoBehaviour {
 
 	// Update is called once per frame
 	private void Update () {
-		if(Input.GetKeyDown(KeyCode.Space) && jellySprite.IsGrounded(layerMask, 1)) {
+		#if UNITY_EDITOR
+			if(Input.GetKeyDown(KeyCode.Space) && jellySprite.IsGrounded(layerMask, 1)) {
+		#else
+			if(LeanTouch.Fingers.Count >= 1 && jellySprite.IsGrounded(layerMask, 2)) {
+		#endif
+
 			jumpRegistered = true;
 			Debug.Log("Jump registered");
 		}

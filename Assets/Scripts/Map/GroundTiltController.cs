@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GroundTiltController : MonoBehaviour {
 
+	// CONSTANTS :
+	private const float TURN_RANGE = 0.8f;
+	private const float DEADZONE_RANGE = 0.2f;
 	private const float MAX_GROUND_TILT_DEGREE = 0.30f;
 	private const int TILT_STEP = 15;
 	private const float ROTATION_SPEED = 80f;
@@ -52,9 +55,9 @@ public class GroundTiltController : MonoBehaviour {
 	}
 
 
-
-	private const float TURN_RANGE = 0.8f;
-	private const float DEADZONE_RANGE = 0.2f;
+	///////////////////
+	// ACCELEROMETER //
+	///////////////////
 
 	public float GetTiltFactorForInput() {
 		float accel = Input.acceleration.x;

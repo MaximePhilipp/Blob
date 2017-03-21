@@ -33,7 +33,7 @@ public class GroundTiltController : MonoBehaviour {
 			turnRotation = transform.rotation * Quaternion.Euler(0f, 0f, tiltDirection * ROTATION_SPEED * Time.deltaTime);
 
 			turnRotation.z = Mathf.Clamp(turnRotation.z, -MAX_GROUND_TILT_DEGREE, MAX_GROUND_TILT_DEGREE);
-			transform.rotation = Quaternion.Lerp(transform.rotation, turnRotation, 40f * Time.deltaTime);
+			transform.rotation = Quaternion.Lerp(transform.rotation, turnRotation, 20f * Time.deltaTime);
 
 			tiltDirection = 0;
 		}
@@ -47,7 +47,7 @@ public class GroundTiltController : MonoBehaviour {
 			0f,
 			angle
 		));
-		transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 4f * Time.deltaTime);
+		transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 2f * Time.deltaTime);
 #endif
 	}
 

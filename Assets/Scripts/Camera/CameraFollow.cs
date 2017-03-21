@@ -26,10 +26,10 @@ public class CameraFollow : MonoBehaviour {
 		Vector3 groundEulerAngles = ground.transform.rotation.eulerAngles;
 		float cameraZAngle = 0;
 		if(groundEulerAngles.z <= 180f)
-			cameraZAngle = groundEulerAngles.z * 0.9f;
+			cameraZAngle = groundEulerAngles.z * 0.8f;
 		else {
 			Debug.Log("z euler angle : " + groundEulerAngles.z);
-			cameraZAngle = (360f - groundEulerAngles.z) * 0.9f;
+			cameraZAngle = (-360f + groundEulerAngles.z) * 0.8f;
 		}
 
 		this.transform.rotation = Quaternion.Euler(

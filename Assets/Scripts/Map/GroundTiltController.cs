@@ -28,7 +28,7 @@ public class GroundTiltController : MonoBehaviour {
 #endif
 
 	private void FixedUpdate() {
-/*#if UNITY_EDITOR
+#if UNITY_EDITOR
 		if(!tiltDirection.Equals(0f)) {
 			turnRotation = transform.rotation * Quaternion.Euler(0f, 0f, tiltDirection * ROTATION_SPEED * Time.deltaTime);
 
@@ -38,7 +38,7 @@ public class GroundTiltController : MonoBehaviour {
 			tiltDirection = 0;
 		}
 
-#else*/
+#else
 
 		float angle = GetTiltFactorForInput() * -30f;
 
@@ -48,7 +48,7 @@ public class GroundTiltController : MonoBehaviour {
 			angle
 		));
 		transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 4f * Time.deltaTime);
-//#endif
+#endif
 	}
 
 

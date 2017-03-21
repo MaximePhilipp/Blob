@@ -21,9 +21,7 @@ public class GroundTiltController : MonoBehaviour {
 		if(!tiltDirection.Equals(0f)) {
 			turnRotation = transform.rotation * Quaternion.Euler(0f, 0f, tiltDirection * ROTATION_SPEED * Time.deltaTime);
 
-			Debug.Log("Turn rotation = " + turnRotation.z);
 			turnRotation.z = Mathf.Clamp(turnRotation.z, -MAX_GROUND_TILT_DEGREE, MAX_GROUND_TILT_DEGREE);
-			Debug.Log("Clamp rotation = " + turnRotation.z);
 			transform.rotation = Quaternion.Lerp(transform.rotation, turnRotation, 40f * Time.deltaTime);
 
 			tiltDirection = 0;

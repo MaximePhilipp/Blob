@@ -9,7 +9,6 @@ public class CameraFollow : MonoBehaviour {
 
 	// PROPERTIES :
 	[SerializeField] private GameObject targetPlayer;
-	[SerializeField] private GameObject ground;
 
 	private void Awake() {
 		Application.targetFrameRate = 60;
@@ -23,18 +22,16 @@ public class CameraFollow : MonoBehaviour {
 			CAMERA_SPEED * Time.deltaTime
 		);
 
-		Vector3 groundEulerAngles = ground.transform.rotation.eulerAngles;
+		float groundAngle = GroundTiltController.GetEulerAngleZ();
 		float cameraZAngle = 0;
-		if(groundEulerAngles.z <= 180f)
-			cameraZAngle = groundEulerAngles.z * 0.8f;
-		else {
-			Debug.Log("z euler angle : " + groundEulerAngles.z);
-			cameraZAngle = (-360f + groundEulerAngles.z) * 0.8f;
-		}
+		if(groundAngle <= 180f)
+			cameraZAngle = groundAngle * 0.5f;
+		else
+			cameraZAngle = (-360f + groundAngle) * 0.5f;
 
 		this.transform.rotation = Quaternion.Euler(
-			groundEulerAngles.x,
-			groundEulerAngles.y,
+			0f,
+			0f,
 			cameraZAngle
 		);
 	}

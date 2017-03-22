@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class GroundTiltController : MonoBehaviour {
 
 	// CONSTANTS :
-	private const float TURN_RANGE = 0.8f;
-	private const float DEADZONE_RANGE = 0.2f;
+	private const float TURN_RANGE = 0.95f;
+	private const float DEADZONE_RANGE = 0.05f;
 	private const float MAX_GROUND_TILT_DEGREE = 0.30f;
 	private const float ROTATION_SPEED = 180f;
 
@@ -17,8 +16,11 @@ public class GroundTiltController : MonoBehaviour {
 	private Quaternion turnRotation;
 	[SerializeField] private GameObject player;
 
+	private static GroundTiltController instance;
 
 	private void Awake() {
+		instance = this;
+
 		// Initializes the gyro on device.
 		if(SystemInfo.supportsGyroscope) {
 			Input.gyro.enabled = true;
@@ -33,33 +35,37 @@ public class GroundTiltController : MonoBehaviour {
 #endif
 
 	private void FixedUpdate() {
+
+		Quaternion targetRotation = Quaternion.identity;
+
 #if UNITY_EDITOR
-		if(!tiltDirection.Equals(0f)) {
-			turnRotation = transform.rotation * Quaternion.Euler(0f, 0f, tiltDirection * ROTATION_SPEED * Time.deltaTime);
-
-			turnRotation.z = Mathf.Clamp(turnRotation.z, -MAX_GROUND_TILT_DEGREE, MAX_GROUND_TILT_DEGREE);
-			Quaternion targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 20f * Time.deltaTime);
+		if(tiltDirection.Equals(0f))
+			return;
 
 
-			float angle = targetRotation.eulerAngles.z - transform.rotation.eulerAngles.z;
-			transform.RotateAround(player.transform.position, Vector3.forward, angle);
+		turnRotation = transform.rotation * Quaternion.Euler(0f, 0f, tiltDirection * ROTATION_SPEED * Time.deltaTime);
 
-			tiltDirection = 0;
+		turnRotation.z = Mathf.Clamp(turnRotation.z, -MAX_GROUND_TILT_DEGREE, MAX_GROUND_TILT_DEGREE);
+		targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 20f * Time.deltaTime);
+
+		tiltDirection = 0;
 
 
-		}
 
 #else
 
-		float angle = GetTiltFactorForInput() * -30f;
-
-		Quaternion targetRotation = Quaternion.Euler(new Vector3(
+		Quaternion turnRotation = Quaternion.Euler(new Vector3(
 			0f,
 			0f,
-			angle
+			GetTiltFactorForInput() * MAX_GROUND_TILT_DEGREE * (-100)
 		));
-		transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 2f * Time.deltaTime);
+
+		targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 10f * Time.deltaTime);
+
 #endif
+
+		float angle = targetRotation.eulerAngles.z - transform.rotation.eulerAngles.z;
+		transform.RotateAround(player.transform.position, Vector3.forward, angle);
 	}
 
 
@@ -84,5 +90,9 @@ public class GroundTiltController : MonoBehaviour {
 
 	private float GetRangePercent(float v, float min, float max) {
 		return (v - min) / (max - min);
+	}
+
+	public static float GetEulerAngleZ() {
+		return instance.transform.rotation.eulerAngles.z;
 	}
 }

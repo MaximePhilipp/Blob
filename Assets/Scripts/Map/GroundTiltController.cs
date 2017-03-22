@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class GroundTiltController : MonoBehaviour {
@@ -8,12 +10,12 @@ public class GroundTiltController : MonoBehaviour {
 	private const float TURN_RANGE = 0.8f;
 	private const float DEADZONE_RANGE = 0.2f;
 	private const float MAX_GROUND_TILT_DEGREE = 0.30f;
-	private const int TILT_STEP = 15;
-	private const float ROTATION_SPEED = 80f;
+	private const float ROTATION_SPEED = 180f;
 
 	// PROPERTIES :
 	private float tiltDirection;
 	private Quaternion turnRotation;
+	[SerializeField] private GameObject player;
 
 
 	private void Awake() {
@@ -36,9 +38,15 @@ public class GroundTiltController : MonoBehaviour {
 			turnRotation = transform.rotation * Quaternion.Euler(0f, 0f, tiltDirection * ROTATION_SPEED * Time.deltaTime);
 
 			turnRotation.z = Mathf.Clamp(turnRotation.z, -MAX_GROUND_TILT_DEGREE, MAX_GROUND_TILT_DEGREE);
-			transform.rotation = Quaternion.Lerp(transform.rotation, turnRotation, 20f * Time.deltaTime);
+			Quaternion targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 20f * Time.deltaTime);
+
+
+			float angle = targetRotation.eulerAngles.z - transform.rotation.eulerAngles.z;
+			transform.RotateAround(player.transform.position, Vector3.forward, angle);
 
 			tiltDirection = 0;
+
+
 		}
 
 #else

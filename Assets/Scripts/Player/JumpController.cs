@@ -6,7 +6,7 @@ using UnityEngine;
 public class JumpController : MonoBehaviour {
 
 	// CONSTANTS :
-	private Vector2 jumpForce = new Vector2(0, 300f);
+	private Vector2 jumpForce = new Vector2(0, 450f);
 
 	// PROPERTIES :
 	private LayerMask layerMask;

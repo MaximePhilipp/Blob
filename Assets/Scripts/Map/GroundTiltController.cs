@@ -16,7 +16,28 @@ public class GroundTiltController : MonoBehaviour {
 	private Quaternion turnRotation;
 	[SerializeField] private GameObject player;
 
+	private List<JellySprite> registeredJellySprites;
+
 	private static GroundTiltController instance;
+
+
+	////////////////
+	// STATIC API //
+	////////////////
+
+	public static float GetEulerAngleZ() {
+		return instance.transform.rotation.eulerAngles.z;
+	}
+
+	public static void RegisterJellySprite(JellySprite jellySprite) {
+		instance.registeredJellySprites.Add(jellySprite);
+	}
+
+
+
+	///////////////
+	// LIFECYCLE //
+	///////////////
 
 	private void Awake() {
 		instance = this;
@@ -26,13 +47,26 @@ public class GroundTiltController : MonoBehaviour {
 			Input.gyro.enabled = true;
 			Input.gyro.updateInterval = 0.0167f;		// -> gyro updates at 60Hz
 		}
+
+		registeredJellySprites = new List<JellySprite>();
 	}
+
+
+
+
 
 #if UNITY_EDITOR
 	private void Update () {
 		tiltDirection = -Input.GetAxis("Horizontal");
 	}
 #endif
+
+
+
+
+
+
+
 
 	private void FixedUpdate() {
 
@@ -42,15 +76,12 @@ public class GroundTiltController : MonoBehaviour {
 		if(tiltDirection.Equals(0f))
 			return;
 
-
 		turnRotation = transform.rotation * Quaternion.Euler(0f, 0f, tiltDirection * ROTATION_SPEED * Time.deltaTime);
 
 		turnRotation.z = Mathf.Clamp(turnRotation.z, -MAX_GROUND_TILT_DEGREE, MAX_GROUND_TILT_DEGREE);
 		targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 20f * Time.deltaTime);
 
 		tiltDirection = 0;
-
-
 
 #else
 
@@ -65,6 +96,21 @@ public class GroundTiltController : MonoBehaviour {
 #endif
 
 		float angle = targetRotation.eulerAngles.z - transform.rotation.eulerAngles.z;
+
+		// Rotates the registered jelly sprites along with the map to avoid them "falling" if they are far from the rotation center.
+		foreach(JellySprite sprite in registeredJellySprites) {
+
+			// if the sprite is close to the player, not disabling it.
+			if(Vector2.Distance(sprite.transform.position, player.transform.position) < 10f)
+				continue;
+
+			sprite.SetPosition(
+				RotatePointAroundPivot(sprite.transform.position, player.transform.position, angle),
+				false
+			);
+		}
+
+
 		transform.RotateAround(player.transform.position, Vector3.forward, angle);
 	}
 
@@ -92,7 +138,13 @@ public class GroundTiltController : MonoBehaviour {
 		return (v - min) / (max - min);
 	}
 
-	public static float GetEulerAngleZ() {
-		return instance.transform.rotation.eulerAngles.z;
+
+
+	/////////////
+	// HELPERS //
+	/////////////
+
+	private Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, float angle) {
+		return Quaternion.Euler(0f, 0f, angle) * (point - pivot) + pivot;
 	}
 }

@@ -91,6 +91,9 @@ public class GroundTiltController : MonoBehaviour {
 			GetTiltFactorForInput() * MAX_GROUND_TILT_DEGREE * (-100)
 		));
 
+		if(turnRotation.z.Equals(0))
+			return;
+
 		targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 10f * Time.deltaTime);
 
 #endif

@@ -11,6 +11,7 @@ public class EndGamePopupController : MonoBehaviour {
 	[SerializeField] private Canvas popupCanvas;
 	[SerializeField] private Text timeLabel;
 	[SerializeField] private Text scoreLabel;
+	private float displayTime;
 
 
 	public void ShowEndGamePopup(float time, int score) {
@@ -21,12 +22,16 @@ public class EndGamePopupController : MonoBehaviour {
 		scoreLabel.text = String.Format(scoreLabel.text, score);
 
 		popupCanvas.gameObject.SetActive(true);
+		displayTime = Time.time;
 
 		Debug.Log("Popup displayed.");
 	}
 
 	private void Update() {
 		if(LeanTouch.Fingers.Count >= 1 && popupCanvas.gameObject.activeSelf) {
+
+			if(Time.time - displayTime < 2f)
+				return;
 
 			Debug.Log("Reseting the game.");
 			Application.LoadLevel (Application.loadedLevelName);

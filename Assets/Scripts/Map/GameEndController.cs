@@ -9,6 +9,7 @@ public class GameEndController : MonoBehaviour {
 
 	// PROPERTIES :
 	[SerializeField] private GameObject playerGameObject;
+	[SerializeField] private GameObject App;
 	private bool isPlayerInTheZone;
 	private CircleCollider2D collider;
 	private float startingTime;
@@ -42,8 +43,7 @@ public class GameEndController : MonoBehaviour {
 		Debug.Log("There are " + GetLittleEmojisAmount() + " little emojis with the player.");
 		Debug.Log("The player took " + GetGameDuration() + " seconds to complete the level.");
 
-		// TODO : Reset on the click on the result
-		Application.LoadLevel (Application.loadedLevelName);
+		App.GetComponent<EndGamePopupController>().ShowEndGamePopup(GetGameDuration(), GetLittleEmojisAmount());
 	}
 
 

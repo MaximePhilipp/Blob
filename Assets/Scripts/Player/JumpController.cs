@@ -7,11 +7,13 @@ public class JumpController : MonoBehaviour {
 
 	// CONSTANTS :
 	private Vector2 jumpForce = new Vector2(0, 450f);
+	private float DELAY_BETWEEN_JUMPS = 0.2f;
 
 	// PROPERTIES :
 	private LayerMask layerMask;
 	private bool jumpRegistered;
 	private JellySprite jellySprite;
+	private float lastJumpTime;
 
 	private void Start() {
 		jellySprite = GetComponent<JellySprite>();
@@ -27,19 +29,19 @@ public class JumpController : MonoBehaviour {
 		#endif
 
 			jumpRegistered = true;
-			Debug.Log("Jump registered");
 		}
 	}
 
 	private void FixedUpdate() {
 		if(jumpRegistered) {
 
-			float groundAngle = GroundTiltController.GetEulerAngleZ();
-			jumpForce.x = groundAngle <= 180f ? groundAngle * -4 : (360f - groundAngle) * 4f;
-			jellySprite.AddForce(jumpForce);
+			if(Time.time - lastJumpTime > DELAY_BETWEEN_JUMPS) {
+				float groundAngle = GroundTiltController.GetEulerAngleZ();
+				jumpForce.x = groundAngle <= 180f ? groundAngle * -4 : (360f - groundAngle) * 4f;
+				jellySprite.AddForce(jumpForce);
+			}
 
 			jumpRegistered = false;
-			Debug.Log("Performing jump.");
 		}
 	}
 }

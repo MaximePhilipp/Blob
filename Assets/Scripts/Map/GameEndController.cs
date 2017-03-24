@@ -10,7 +10,14 @@ public class GameEndController : MonoBehaviour {
 	// PROPERTIES :
 	[SerializeField] private GameObject playerGameObject;
 	private bool isPlayerInTheZone;
+	private CircleCollider2D collider;
+	private float startingTime;
 
+
+	private void Awake() {
+		collider = GetComponent<CircleCollider2D>();
+		startingTime = Time.time;
+	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
 		if(other.gameObject == playerGameObject && !isPlayerInTheZone) {
@@ -32,7 +39,29 @@ public class GameEndController : MonoBehaviour {
 		yield return new WaitForSeconds(DELAY_TO_FINISH_GAME_SECONDS);
 		Debug.Log("Game Finished.");
 
+		Debug.Log("There are " + GetLittleEmojisAmount() + " little emojis with the player.");
+		Debug.Log("The player took " + GetGameDuration() + " seconds to complete the level.");
+
 		// TODO : Reset on the click on the result
 		Application.LoadLevel (Application.loadedLevelName);
+	}
+
+
+	private int GetLittleEmojisAmount() {
+		GameObject[] playersInGame = GameObject.FindGameObjectsWithTag("Player");
+		int playersInTheZone = 0;
+
+		foreach(GameObject player in playersInGame) {
+			if(collider.OverlapPoint(player.transform.position))
+				playersInTheZone++;
+		}
+
+		Debug.Log("There are " + playersInTheZone + " players in the zone.");
+
+		return playersInTheZone - 1;	// -> removing the big player from the process
+	}
+
+	private float GetGameDuration() {
+		return Time.time - startingTime;
 	}
 }

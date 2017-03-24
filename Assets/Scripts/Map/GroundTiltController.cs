@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Lean.Touch;
 using UnityEngine;
 
 public class GroundTiltController : MonoBehaviour {
@@ -44,25 +45,33 @@ public class GroundTiltController : MonoBehaviour {
 	private void Awake() {
 		instance = this;
 
-		// Initializes the gyro on device.
-		if(SystemInfo.supportsGyroscope) {
-			Input.gyro.enabled = true;
-			Input.gyro.updateInterval = 0.0167f;		// -> gyro updates at 60Hz
-		}
+		//InitAccelerometer();
 
 		registeredJellySprites = new List<JellySprite>();
 		mapColliders = GetComponents<PolygonCollider2D>().ToList();
 	}
 
-
-
-
-
-#if UNITY_EDITOR
-	private void Update () {
-		tiltDirection = -Input.GetAxis("Horizontal");
+	private void InitAccelerometer() {
+		if(SystemInfo.supportsGyroscope) {
+			Input.gyro.enabled = true;
+			Input.gyro.updateInterval = 0.0167f;		// -> gyro updates at 60Hz
+		}
 	}
+
+
+
+
+
+	private void Update () {
+#if UNITY_EDITOR
+		tiltDirection = -Input.GetAxis("Horizontal");
 #endif
+
+		if(LeanTouch.Fingers.Count >= 1) {
+			tiltDirection = LeanTouch.Fingers[0].ScreenPosition.x < Screen.width / 2f ? 1 : -1;
+		}
+	}
+
 
 
 
@@ -101,7 +110,7 @@ public class GroundTiltController : MonoBehaviour {
 
 		Quaternion targetRotation = Quaternion.identity;
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
 		if(tiltDirection.Equals(0f))
 			return;
 
@@ -112,7 +121,7 @@ public class GroundTiltController : MonoBehaviour {
 
 		tiltDirection = 0;
 
-#else
+/*#else
 
 		Quaternion turnRotation = Quaternion.Euler(new Vector3(
 			0f,
@@ -125,7 +134,7 @@ public class GroundTiltController : MonoBehaviour {
 
 		targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 10f * Time.deltaTime);
 
-#endif
+#endif*/
 
 		float angle = targetRotation.eulerAngles.z - transform.rotation.eulerAngles.z;
 
@@ -133,7 +142,7 @@ public class GroundTiltController : MonoBehaviour {
 		foreach(JellySprite sprite in registeredJellySprites) {
 
 			// if the sprite is close to the player, not disabling it.
-			if(Vector2.Distance(sprite.transform.position, player.transform.position) < 10f)
+			if(Vector2.Distance(sprite.transform.position, player.transform.position) < 2f)
 				continue;
 
 			sprite.SetPosition(

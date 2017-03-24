@@ -25,7 +25,7 @@ public class JumpController : MonoBehaviour {
 		#if UNITY_EDITOR
 			if(Input.GetKeyDown(KeyCode.Space) && jellySprite.IsGrounded(layerMask, 1)) {
 		#else
-			if(LeanTouch.Fingers.Count >= 1 && jellySprite.IsGrounded(layerMask, 2)) {
+			if(LeanTouch.Fingers.Count >= 2 && jellySprite.IsGrounded(layerMask, 2)) {
 		#endif
 
 			jumpRegistered = true;

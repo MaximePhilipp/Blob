@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameEndController : MonoBehaviour {
 
@@ -10,6 +11,9 @@ public class GameEndController : MonoBehaviour {
 	// PROPERTIES :
 	[SerializeField] private GameObject playerGameObject;
 	[SerializeField] private GameObject App;
+	[SerializeField] private Canvas preloaderCanvas;
+	[SerializeField] private Image preloaderImage;
+
 	private bool isPlayerInTheZone;
 	private CircleCollider2D collider;
 	private float startingTime;
@@ -24,6 +28,7 @@ public class GameEndController : MonoBehaviour {
 		if(other.gameObject == playerGameObject && !isPlayerInTheZone) {
 			Debug.Log("Player entered the finish zone.");
 			isPlayerInTheZone = true;
+			ShowPreloader();
 			StartCoroutine(CountdownToTheFinish());
 		}
 	}
@@ -33,12 +38,21 @@ public class GameEndController : MonoBehaviour {
 			Debug.Log("Player left the finish zone.");
 			isPlayerInTheZone = false;
 			StopAllCoroutines();
+			HidePreloader();
 		}
 	}
 
 	private IEnumerator CountdownToTheFinish() {
-		yield return new WaitForSeconds(DELAY_TO_FINISH_GAME_SECONDS);
+
+		float currentElapsedTime = 0f;
+
+		while(currentElapsedTime <= DELAY_TO_FINISH_GAME_SECONDS) {
+			currentElapsedTime += Time.deltaTime;
+			preloaderImage.fillAmount = currentElapsedTime / DELAY_TO_FINISH_GAME_SECONDS;
+			yield return null;
+		}
 		Debug.Log("Game Finished.");
+		HidePreloader();
 
 		Debug.Log("There are " + GetLittleEmojisAmount() + " little emojis with the player.");
 		Debug.Log("The player took " + GetGameDuration() + " seconds to complete the level.");
@@ -63,5 +77,19 @@ public class GameEndController : MonoBehaviour {
 
 	private float GetGameDuration() {
 		return Time.time - startingTime;
+	}
+
+
+
+
+
+	// PRELOADER :
+	private void ShowPreloader() {
+		preloaderCanvas.gameObject.SetActive(true);
+		preloaderImage.fillAmount = 0f;
+	}
+
+	private void HidePreloader() {
+		preloaderCanvas.gameObject.SetActive(false);
 	}
 }

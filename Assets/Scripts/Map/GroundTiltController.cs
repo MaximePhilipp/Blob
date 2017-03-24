@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GroundTiltController : MonoBehaviour {
@@ -17,6 +18,7 @@ public class GroundTiltController : MonoBehaviour {
 	[SerializeField] private GameObject player;
 
 	private List<JellySprite> registeredJellySprites;
+	private List<PolygonCollider2D> mapColliders;
 
 	private static GroundTiltController instance;
 
@@ -49,6 +51,7 @@ public class GroundTiltController : MonoBehaviour {
 		}
 
 		registeredJellySprites = new List<JellySprite>();
+		mapColliders = GetComponents<PolygonCollider2D>().ToList();
 	}
 
 
@@ -69,6 +72,32 @@ public class GroundTiltController : MonoBehaviour {
 
 
 	private void FixedUpdate() {
+
+
+		// Deactivates the colliders where there is no player.
+		// This is a pretty heavy process, so checking once every 3 frames.
+		if(Time.frameCount % 3 == 0) {
+			GameObject[] playersInGame = GameObject.FindGameObjectsWithTag("Player");
+			bool colliderShouldBeActivated;
+
+			foreach(PolygonCollider2D collider2D in mapColliders) {
+
+				collider2D.enabled = true;
+				colliderShouldBeActivated = false;
+				foreach(GameObject player in playersInGame) {
+					if(collider2D.bounds.SqrDistance(player.transform.position) < 4f) {
+						colliderShouldBeActivated = true;
+						break;
+					}
+				}
+
+				collider2D.enabled = colliderShouldBeActivated;
+			}
+		}
+
+
+
+
 
 		Quaternion targetRotation = Quaternion.identity;
 

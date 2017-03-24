@@ -10,7 +10,7 @@ public class GroundTiltController : MonoBehaviour {
 	// CONSTANTS :
 	private const float TURN_RANGE = 0.95f;
 	private const float DEADZONE_RANGE = 0.05f;
-	private const float MAX_GROUND_TILT_DEGREE = 0.30f;
+	private const float MAX_GROUND_TILT_DEGREE = 0.40f;
 	private const float ROTATION_SPEED = 180f;
 
 	// PROPERTIES :
@@ -85,7 +85,7 @@ public class GroundTiltController : MonoBehaviour {
 
 		// Deactivates the colliders where there is no player.
 		// This is a pretty heavy process, so checking once every 3 frames.
-		if(Time.frameCount % 3 == 0) {
+		if(Time.frameCount % 2 == 0) {
 			GameObject[] playersInGame = GameObject.FindGameObjectsWithTag("Player");
 			bool colliderShouldBeActivated;
 

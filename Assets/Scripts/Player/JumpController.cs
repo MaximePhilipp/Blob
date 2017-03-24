@@ -39,6 +39,8 @@ public class JumpController : MonoBehaviour {
 				float groundAngle = GroundTiltController.GetEulerAngleZ();
 				jumpForce.x = groundAngle <= 180f ? groundAngle * -4 : (360f - groundAngle) * 4f;
 				jellySprite.AddForce(jumpForce);
+
+				lastJumpTime = Time.time;
 			}
 
 			jumpRegistered = false;

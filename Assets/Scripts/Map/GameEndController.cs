@@ -31,5 +31,8 @@ public class GameEndController : MonoBehaviour {
 	private IEnumerator CountdownToTheFinish() {
 		yield return new WaitForSeconds(DELAY_TO_FINISH_GAME_SECONDS);
 		Debug.Log("Game Finished.");
+
+		// TODO : Reset on the click on the result
+		Application.LoadLevel (Application.loadedLevelName);
 	}
 }

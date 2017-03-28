@@ -24,16 +24,11 @@ public class CameraFollow : MonoBehaviour {
 
 		float groundAngle = GroundTiltController.GetEulerAngleZ();
 		float cameraZAngle = 0;
-
-		if (AppData.GetCurrentTiltType() == AppData.GroundTiltType.Touch) {
-			if (groundAngle <= 180f)
-				cameraZAngle = groundAngle * 0.3f;
-			else
-				cameraZAngle = (-360f + groundAngle) * 0.3f;
-		}
-		else {
-			cameraZAngle = groundAngle;
-		}
+		float cameraTiltFactor = AppData.GetCurrentTiltType() == AppData.GroundTiltType.Touch ? 0.3f : 0.9f;
+		if (groundAngle <= 180f)
+			cameraZAngle = groundAngle * cameraTiltFactor;
+		else
+			cameraZAngle = (-360f + groundAngle) * cameraTiltFactor;
 
 		this.transform.rotation = Quaternion.Euler(
 			0f,

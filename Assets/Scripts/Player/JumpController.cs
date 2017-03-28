@@ -22,11 +22,13 @@ public class JumpController : MonoBehaviour {
 
 	// Update is called once per frame
 	private void Update () {
+
 		#if UNITY_EDITOR
 			if(Input.GetKeyDown(KeyCode.Space) && jellySprite.IsGrounded(layerMask, 1)) {
-		#else
-			if(LeanTouch.Fingers.Count >= 2 && jellySprite.IsGrounded(layerMask, 2)) {
-		#endif
+#else
+			if(jellySprite.IsGrounded(layerMask, 2) && 
+				((AppData.GetCurrentTiltType() == AppData.GroundTiltType.Touch && LeanTouch.Fingers.Count >= 2) || (AppData.GetCurrentTiltType() == AppData.GroundTiltType.Gyro && LeanTouch.Fingers.Count >= 1))) {
+#endif
 
 			jumpRegistered = true;
 		}

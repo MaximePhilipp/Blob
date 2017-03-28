@@ -45,7 +45,7 @@ public class GroundTiltController : MonoBehaviour {
 	private void Awake() {
 		instance = this;
 
-		//InitAccelerometer();
+		InitAccelerometer();
 
 		registeredJellySprites = new List<JellySprite>();
 		mapColliders = GetComponents<PolygonCollider2D>().ToList();
@@ -67,7 +67,7 @@ public class GroundTiltController : MonoBehaviour {
 		tiltDirection = -Input.GetAxis("Horizontal");
 #endif
 
-		if(LeanTouch.Fingers.Count >= 1) {
+		if(LeanTouch.Fingers.Count >= 1 && AppData.GetCurrentTiltType() == AppData.GroundTiltType.Touch) {
 			tiltDirection = LeanTouch.Fingers[0].ScreenPosition.x < Screen.width / 2f ? 1 : -1;
 		}
 	}
@@ -110,31 +110,30 @@ public class GroundTiltController : MonoBehaviour {
 
 		Quaternion targetRotation = Quaternion.identity;
 
-//#if UNITY_EDITOR
-		if(tiltDirection.Equals(0f))
-			return;
+		if (AppData.GetCurrentTiltType() == AppData.GroundTiltType.Touch) {
+			if (tiltDirection.Equals(0f))
+				return;
 
-		turnRotation = transform.rotation * Quaternion.Euler(0f, 0f, tiltDirection * ROTATION_SPEED * Time.deltaTime);
+			turnRotation = transform.rotation * Quaternion.Euler(0f, 0f, tiltDirection * ROTATION_SPEED * Time.deltaTime);
 
-		turnRotation.z = Mathf.Clamp(turnRotation.z, -MAX_GROUND_TILT_DEGREE, MAX_GROUND_TILT_DEGREE);
-		targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 20f * Time.deltaTime);
+			turnRotation.z = Mathf.Clamp(turnRotation.z, -MAX_GROUND_TILT_DEGREE, MAX_GROUND_TILT_DEGREE);
+			targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 20f * Time.deltaTime);
 
-		tiltDirection = 0;
+			tiltDirection = 0;
+		}
 
-/*#else
+		if(AppData.GetCurrentTiltType() == AppData.GroundTiltType.Gyro) {
+			Quaternion turnRotation = Quaternion.Euler(new Vector3(
+				0f,
+				0f,
+				GetTiltFactorForInput() * MAX_GROUND_TILT_DEGREE * (-100)
+			));
 
-		Quaternion turnRotation = Quaternion.Euler(new Vector3(
-			0f,
-			0f,
-			GetTiltFactorForInput() * MAX_GROUND_TILT_DEGREE * (-100)
-		));
+			if(turnRotation.z.Equals(0))
+				return;
 
-		if(turnRotation.z.Equals(0))
-			return;
-
-		targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 10f * Time.deltaTime);
-
-#endif*/
+			targetRotation = Quaternion.Lerp(transform.rotation, turnRotation, 10f * Time.deltaTime);
+		}
 
 		float angle = targetRotation.eulerAngles.z - transform.rotation.eulerAngles.z;
 

@@ -9,12 +9,12 @@ public class ControlsSettingsPopupController : MonoBehaviour {
 
 
 	public void OnTouchSettingClicked() {
-		AppData.SetCurrentTiltType(AppData.GroundTiltType.Touch);
+		AppData.StartGame(AppData.GroundTiltType.Touch);
 		DisablePopup();
 	}
 
 	public void OnGyroSettingClicked() {
-		AppData.SetCurrentTiltType(AppData.GroundTiltType.Gyro);
+		AppData.StartGame(AppData.GroundTiltType.Gyro);
 		DisablePopup();
 	}
 

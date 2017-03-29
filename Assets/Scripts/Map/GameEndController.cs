@@ -16,12 +16,10 @@ public class GameEndController : MonoBehaviour {
 
 	private bool isPlayerInTheZone;
 	private CircleCollider2D collider;
-	private float startingTime;
 
 
 	private void Awake() {
 		collider = GetComponent<CircleCollider2D>();
-		startingTime = Time.time;
 	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
@@ -76,7 +74,7 @@ public class GameEndController : MonoBehaviour {
 	}
 
 	private float GetGameDuration() {
-		return Time.time - startingTime;
+		return Time.time - AppData.GetStartTime();
 	}
 
 

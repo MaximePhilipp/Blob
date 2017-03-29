@@ -12,6 +12,7 @@ public class AppData : MonoBehaviour {
 
 	// PROPERTIES :
 	private static GroundTiltType tiltType;
+	private static float startTime;
 
 
 	private void Start() {
@@ -23,7 +24,16 @@ public class AppData : MonoBehaviour {
 		return tiltType;
 	}
 
-	public static void SetCurrentTiltType(GroundTiltType type) {
+	public static void StartGame(GroundTiltType type) {
+		SetCurrentTiltType(type);
+		startTime = Time.time;
+	}
+		
+	private static void SetCurrentTiltType(GroundTiltType type) {
 		tiltType = type;
+	}
+
+	public static float GetStartTime() {
+		return startTime;
 	}
 }

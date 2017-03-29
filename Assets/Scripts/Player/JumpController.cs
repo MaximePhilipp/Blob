@@ -26,11 +26,11 @@ public class JumpController : MonoBehaviour {
 		if(AppData.GetCurrentTiltType() == AppData.GroundTiltType.None)
 			return;
 
-		#if UNITY_EDITOR
-			if(Input.GetKeyDown(KeyCode.Space) && jellySprite.IsGrounded(layerMask, 1)) {
+#if UNITY_EDITOR
+		if(Input.GetKeyDown(KeyCode.Space) && jellySprite.IsGrounded(layerMask, 1)) {
 #else
-			if(jellySprite.IsGrounded(layerMask, 2) && 
-				((AppData.GetCurrentTiltType() == AppData.GroundTiltType.Touch && LeanTouch.Fingers.Count >= 2) || (AppData.GetCurrentTiltType() == AppData.GroundTiltType.Gyro && LeanTouch.Fingers.Count >= 1))) {
+		if(jellySprite.IsGrounded(layerMask, 2) && 
+			((AppData.GetCurrentTiltType() == AppData.GroundTiltType.Touch && LeanTouch.Fingers.Count >= 2) || (AppData.GetCurrentTiltType() == AppData.GroundTiltType.Gyro && LeanTouch.Fingers.Count >= 1))) {
 #endif
 
 			jumpRegistered = true;

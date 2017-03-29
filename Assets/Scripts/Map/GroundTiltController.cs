@@ -82,6 +82,9 @@ public class GroundTiltController : MonoBehaviour {
 
 	private void FixedUpdate() {
 
+		if(AppData.GetCurrentTiltType() == AppData.GroundTiltType.None)
+			return;
+
 
 		// Deactivates the colliders where there is no player.
 		// This is a pretty heavy process, so checking once every 3 frames.
@@ -110,7 +113,7 @@ public class GroundTiltController : MonoBehaviour {
 
 		Quaternion targetRotation = Quaternion.identity;
 
-		if (AppData.GetCurrentTiltType() == AppData.GroundTiltType.Touch) {
+		if(AppData.GetCurrentTiltType() == AppData.GroundTiltType.Touch) {
 			if (tiltDirection.Equals(0f))
 				return;
 

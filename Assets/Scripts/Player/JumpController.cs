@@ -23,6 +23,9 @@ public class JumpController : MonoBehaviour {
 	// Update is called once per frame
 	private void Update () {
 
+		if(AppData.GetCurrentTiltType() == AppData.GroundTiltType.None)
+			return;
+
 		#if UNITY_EDITOR
 			if(Input.GetKeyDown(KeyCode.Space) && jellySprite.IsGrounded(layerMask, 1)) {
 #else

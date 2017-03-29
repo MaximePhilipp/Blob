@@ -5,6 +5,7 @@ using UnityEngine;
 public class AppData : MonoBehaviour {
 
 	public enum GroundTiltType {
+		None,
 		Touch,
 		Gyro
 	}
@@ -13,14 +14,16 @@ public class AppData : MonoBehaviour {
 	private static GroundTiltType tiltType;
 
 
+	private void Start() {
+		tiltType = GroundTiltType.None;
+	}
+
+
 	public static GroundTiltType GetCurrentTiltType() {
 		return tiltType;
 	}
 
-
-	// TODO Create the switch between the controls.
-	private void Start() {
-		tiltType = GroundTiltType.Touch;
+	public static void SetCurrentTiltType(GroundTiltType type) {
+		tiltType = type;
 	}
-
 }
